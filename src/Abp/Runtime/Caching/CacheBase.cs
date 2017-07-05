@@ -61,7 +61,8 @@ namespace Abp.Runtime.Caching
             var item = await GetOrDefaultAsync(key);
             if (item == null)
             {
-                using (await _asyncLock.LockAsync())
+                var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(2));
+                using (await _asyncLock.LockAsync(cts.Token))
                 {
                     item = await GetOrDefaultAsync(key);
                     if (item == null)
